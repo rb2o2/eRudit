@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
 			for (int j = 0; j<15; j++)	{
 				
 				tvTable[i][j] = new BoardCell(this);
-				tvTable[i][j].setText("!");
+				tvTable[i][j].setText("");
 				tvTable[i][j].setGravity(Gravity.CENTER);
 //				tvTable[i][j].setOnClickListener(new View.OnClickListener() {
 //					
@@ -110,6 +110,7 @@ public class MainActivity extends Activity {
 		tvTable[10][4].setSpecial(BoardCell.L3);
 		
 		tvTable[1][1].setSpecial(BoardCell.L2);
+		//TODO доделать бонусы L2
 		
 		findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
 			
@@ -117,7 +118,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				for (int i = 0; i < 15; i++) {
-					for (int j = 0; j < 15; j++) tvTable[i][j].setText("!");
+					for (int j = 0; j < 15; j++) tvTable[i][j].setText("");
 				}
 				
 			}
