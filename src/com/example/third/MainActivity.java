@@ -42,20 +42,14 @@ public class MainActivity extends Activity {
 		LinearLayout rows = (LinearLayout)findViewById(R.id.rows);
 		LinearLayout rowsList[] = new LinearLayout[15];
 		for (int i = 0; i<15; i++) {
-			rowsList[i] = new LinearLayout(this);
+			rowsList[i] = new LinearLayout(this);//HORIZONTAL by default
 			for (int j = 0; j<15; j++)	{
 				
 				tvTable[i][j] = new BoardCell(this);
 				tvTable[i][j].setText("");
 				tvTable[i][j].setGravity(Gravity.CENTER);
-//				tvTable[i][j].setOnClickListener(new View.OnClickListener() {
-//					
-//					@Override
-//					public void onClick(View v) {
-//						// TODO Auto-generated method stub
-//						v.setBackgroundColor(Color.MAGENTA);
-//					}
-//				});
+				tvTable[i][j].setCoordX(j);
+				tvTable[i][j].setCoordY(i);
 				tvTable[i][j].setOnDragListener(new View.OnDragListener() {
 					
 					@Override
@@ -63,6 +57,16 @@ public class MainActivity extends Activity {
 						// TODO Auto-generated method stub
 						if(event.getAction() == DragEvent.ACTION_DROP) ((TextView)v).setText(event.getClipData().getItemAt(0).getText());
 						return true;
+					}
+				});
+				tvTable[i][j].setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						((BoardCell)v).setHighlight(!((BoardCell)v).isHighlight());
+						if (((BoardCell)v).isHighlight()) v.setBackgroundColor(0x44ff00ff);
+						else v.setBackgroundColor(Color.TRANSPARENT);
 					}
 				});
 				rowsList[i].addView(tvTable[i][j],14,14);
@@ -133,12 +137,12 @@ public class MainActivity extends Activity {
 				v.setOnTouchListener(otl);
 			}
 		}
-		View[][] fields = new View[15][15];
-		for (int i = 0;i<15;i++) {
-			for (int j =0; j<15; j++) {
-//				fields[i][j] = ;
-			}
-		}
+//		View[][] fields = new View[15][15];
+//		for (int i = 0;i<15;i++) {
+//			for (int j =0; j<15; j++) {
+////				fields[i][j] = ;
+//			}
+//		}
 		
 //		ImageView iv = (ImageView)findViewById(R.id.imageView1); //iv - это View с нашим игровым полем
 //		/*

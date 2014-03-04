@@ -17,7 +17,10 @@ public class LetterDragEvntL implements OnDragListener {
 			Log.d(MainActivity.TAG,"LetterL"+v.getId()+" drag started");
 			break;
 			}
-		
+		case DragEvent.ACTION_DRAG_ENDED : {
+			Log.d(MainActivity.TAG,"LetterL "+v.getId()+" drag ended");
+			if (v.equals(e.getLocalState())) ((TextView)v).setText("");
+		}
 		default: break; 
 		}
 		return true;
