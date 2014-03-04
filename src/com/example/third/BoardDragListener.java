@@ -14,7 +14,7 @@ public class BoardDragListener implements OnDragListener {
 		
 		//кодга наше поле получает событие DragEvent.ACTION_DRAG_ENTERED, он становится невидимым
 		case DragEvent.ACTION_DRAG_ENTERED : {
-			if (v.getId()== R.id.imageView1) {v.setVisibility(View.INVISIBLE);}
+			if (/*v.getId()== R.id.imageView1*/ true) {v.setVisibility(View.INVISIBLE);}
 
 			Log.d(MainActivity.TAG,"BoardL"+v.getId()+" drag entered");
 			break;
