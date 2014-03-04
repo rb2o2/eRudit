@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Color;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	public static final String TAG = "mydbg";// Это тег для журналирования, вызываемого Log.d(TAG,"сообщение")
+	private BoardCell tvTable[][] = new BoardCell[15][15];
+
 	/**
 	 * Этот метод вызывается при запуске активити, в onCreate() пишется инициализация
 	 */
@@ -37,27 +40,88 @@ public class MainActivity extends Activity {
 		RelativeLayout rlBoard = (RelativeLayout)findViewById(R.id.rl1);
 //		rlBoard.getLayoutParams().
 		LinearLayout rows = (LinearLayout)findViewById(R.id.rows);
-		TextView tvTable[][] = new TextView[15][15];
 		LinearLayout rowsList[] = new LinearLayout[15];
 		for (int i = 0; i<15; i++) {
 			rowsList[i] = new LinearLayout(this);
 			for (int j = 0; j<15; j++)	{
 				
-				tvTable[i][j] = new TextView(this);
+				tvTable[i][j] = new BoardCell(this);
 				tvTable[i][j].setText("!");
 				tvTable[i][j].setGravity(Gravity.CENTER);
-				tvTable[i][j].setOnClickListener(new View.OnClickListener() {
+//				tvTable[i][j].setOnClickListener(new View.OnClickListener() {
+//					
+//					@Override
+//					public void onClick(View v) {
+//						// TODO Auto-generated method stub
+//						v.setBackgroundColor(Color.MAGENTA);
+//					}
+//				});
+				tvTable[i][j].setOnDragListener(new View.OnDragListener() {
 					
 					@Override
-					public void onClick(View v) {
+					public boolean onDrag(View v, DragEvent event) {
 						// TODO Auto-generated method stub
-						v.setBackgroundColor(Color.MAGENTA);
+						if(event.getAction() == DragEvent.ACTION_DROP) ((TextView)v).setText(event.getClipData().getItemAt(0).getText());
+						return true;
 					}
 				});
 				rowsList[i].addView(tvTable[i][j],14,14);
 			}
 			rows.addView(rowsList[i]);
 		}
+//здесь идет присвоение клеткам специальных значений для умножений номинала		
+		tvTable[0][0].setSpecial(BoardCell.W3);
+		tvTable[6][0].setSpecial(BoardCell.W3);
+		tvTable[14][0].setSpecial(BoardCell.W3);
+		tvTable[0][6].setSpecial(BoardCell.W3);
+		tvTable[14][6].setSpecial(BoardCell.W3);
+		tvTable[0][14].setSpecial(BoardCell.W3);
+		tvTable[6][14].setSpecial(BoardCell.W3);
+		tvTable[14][14].setSpecial(BoardCell.W3);
+		
+		tvTable[5][1].setSpecial(BoardCell.W2);
+		tvTable[1][5].setSpecial(BoardCell.W2);
+		tvTable[9][1].setSpecial(BoardCell.W2);
+		tvTable[1][9].setSpecial(BoardCell.W2);
+		tvTable[5][5].setSpecial(BoardCell.W2);
+		tvTable[5][9].setSpecial(BoardCell.W2);
+		tvTable[9][5].setSpecial(BoardCell.W2);
+		tvTable[9][9].setSpecial(BoardCell.W2);
+		tvTable[5][13].setSpecial(BoardCell.W2);
+		tvTable[13][5].setSpecial(BoardCell.W2);
+		tvTable[13][9].setSpecial(BoardCell.W2);
+		tvTable[9][13].setSpecial(BoardCell.W2);
+		
+		tvTable[1][1].setSpecial(BoardCell.L3);
+		tvTable[2][2].setSpecial(BoardCell.L3);
+		tvTable[3][3].setSpecial(BoardCell.L3);
+		tvTable[4][4].setSpecial(BoardCell.L3);
+		tvTable[1][13].setSpecial(BoardCell.L3);
+		tvTable[2][12].setSpecial(BoardCell.L3);
+		tvTable[3][11].setSpecial(BoardCell.L3);
+		tvTable[4][10].setSpecial(BoardCell.L3);
+		tvTable[13][13].setSpecial(BoardCell.L3);
+		tvTable[12][12].setSpecial(BoardCell.L3);
+		tvTable[11][11].setSpecial(BoardCell.L3);
+		tvTable[10][10].setSpecial(BoardCell.L3);
+		tvTable[13][1].setSpecial(BoardCell.L3);
+		tvTable[12][2].setSpecial(BoardCell.L3);
+		tvTable[11][3].setSpecial(BoardCell.L3);
+		tvTable[10][4].setSpecial(BoardCell.L3);
+		
+		tvTable[1][1].setSpecial(BoardCell.L2);
+		
+		findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				for (int i = 0; i < 15; i++) {
+					for (int j = 0; j < 15; j++) tvTable[i][j].setText("!");
+				}
+				
+			}
+		});
 //		ViewGroup boardL = (ViewGroup)findViewById(R.id.linL1);
 		LetterDragEvntL odl = new LetterDragEvntL();     // odl - кастомный слушатель драг-события, который мы повесим на буквы
 		BoardDragListener bdl = new BoardDragListener(); // bdl - кастомный слушатель драг-события, который мы повесим на игровое поле

@@ -132,4 +132,13 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/button1"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linLayoutL"
+        android:layout_alignRight="@+id/rl1"
+        android:text="очистить поле" />
+
 </RelativeLayout>
