@@ -9,12 +9,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/hw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
     <LinearLayout
         android:id="@+id/linLayoutL"
         android:layout_width="wrap_content"
@@ -26,95 +20,101 @@
 
         <TextView
             android:id="@+id/TextView07"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="10dp"
             android:background="#d0d0d0"
+            android:gravity="center"
             android:longClickable="true"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:text="А"
             android:textSize="14sp" />
 
         <TextView
             android:id="@+id/TextView06"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="10dp"
             android:background="#d0d0d0"
+            android:gravity="center"
             android:longClickable="true"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:text="Б"
             android:textSize="14sp" />
 
         <TextView
             android:id="@+id/TextView05"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="10dp"
             android:background="#d0d0d0"
+            android:gravity="center"
             android:longClickable="true"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:text="В"
             android:textSize="14dp" />
 
         <TextView
             android:id="@+id/TextView04"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="10dp"
             android:background="#d0d0d0"
+            android:gravity="center"
             android:longClickable="true"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:text="Г"
             android:textSize="14dp" />
 
         <TextView
             android:id="@+id/TextView03"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="10dp"
             android:background="#d0d0d0"
+            android:gravity="center"
             android:longClickable="true"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:text="Д"
             android:textSize="14dp" />
 
         <TextView
             android:id="@+id/TextView02"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="10dp"
             android:background="#d0d0d0"
+            android:gravity="center"
             android:longClickable="true"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:text="Е"
             android:textSize="14dp" />
 
         <TextView
             android:id="@+id/TextView01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="10dp"
             android:background="#d0d0d0"
+            android:gravity="center"
             android:longClickable="true"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:text="Ж"
             android:textSize="14dp" />
-
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rl1"
         android:layout_width="280dp"
         android:layout_height="280dp"
-        android:layout_below="@+id/hw"
+        android:layout_centerHorizontal="true"
         android:background="@drawable/board" >
 
     </RelativeLayout>
@@ -126,10 +126,8 @@
         android:layout_alignBottom="@+id/rl1"
         android:layout_alignLeft="@+id/rl1"
         android:layout_alignRight="@+id/rl1"
-        android:layout_below="@+id/hw"
         android:clipChildren="true"
         android:orientation="vertical" >
-
     </LinearLayout>
 
     <Button
@@ -139,6 +137,16 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/linLayoutL"
         android:layout_alignRight="@+id/rl1"
+        android:layout_marginBottom="20dp"
         android:text="очистить поле" />
+
+    <Button
+        android:id="@+id/button2"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/button1"
+        android:layout_alignLeft="@+id/rl1"
+        android:text="сдать буквы" />
 
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnDragListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 	public static final String TAG = "mydbg";// Это тег для журналирования, вызываемого Log.d(TAG,"сообщение")
 	private BoardCell tvTable[][] = new BoardCell[15][15];
+	private View[] tokenArr;
 
 	/**
 	 * Этот метод вызывается при запуске активити, в onCreate() пишется инициализация
@@ -29,7 +31,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState); // конструкция super.имя метода нужна для вызова одноименного метода класса-родителя
 		setContentView(R.layout.activity_main); //setContentView(id layout-ресурса) заполняет экран активити содержимым из соотв. layout.xml
-		View[] tokenArr = {findViewById(R.id.TextView07), //tokenArr - массив из 7 TextView с буквами
+		tokenArr = new View[] {findViewById(R.id.TextView07), //tokenArr - массив из 7 TextView с буквами
 				findViewById(R.id.TextView06),
 				findViewById(R.id.TextView05),
 				findViewById(R.id.TextView04),
@@ -127,6 +129,18 @@ public class MainActivity extends Activity {
 				
 			}
 		});
+		
+		findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				for (View tok : tokenArr) {
+					if(((TextView)tok).getText()=="") ((TextView)tok).setText(pickLetter());
+				}
+				// TODO Auto-generated method stub
+				
+			}
+		});
 //		ViewGroup boardL = (ViewGroup)findViewById(R.id.linL1);
 		LetterDragEvntL odl = new LetterDragEvntL();     // odl - кастомный слушатель драг-события, который мы повесим на буквы
 		BoardDragListener bdl = new BoardDragListener(); // bdl - кастомный слушатель драг-события, который мы повесим на игровое поле
@@ -151,6 +165,27 @@ public class MainActivity extends Activity {
 //		iv.getLayoutParams().width = 220;
 //		iv.setOnDragListener(bdl);
 
+	}
+
+	public String pickLetter() {
+		// TODO переделать, чтобы брал из "колоды"
+		double rand = Math.random();
+
+
+		switch (2 + (int)(Math.random() * ((10 - 2) + 1))) {
+		case 2: return "А";
+		case 3: return "Е";
+		case 4: return "О";
+		case 5: return "Н";
+		case 6: return "У";
+		case 7: return "П";
+		case 8: return "И";
+		case 9: return "К";
+		case 10: return "С";
+		default: return "*";
+		}
+		
+		
 	}
 
 	@Override
