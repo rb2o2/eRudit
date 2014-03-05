@@ -115,8 +115,9 @@ public class MainActivity extends Activity {
 		tvTable[11][3].setSpecial(BoardCell.L3);
 		tvTable[10][4].setSpecial(BoardCell.L3);
 		
-		tvTable[1][1].setSpecial(BoardCell.L2);
 		//TODO доделать бонусы L2
+		tvTable[1][1].setSpecial(BoardCell.L2);
+
 		
 		findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
 			
