@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.Menu;
@@ -23,6 +24,8 @@ public class MainActivity extends Activity {
 	public static final String TAG = "mydbg";// Это тег для журналирования, вызываемого Log.d(TAG,"сообщение")
 	private BoardCell tvTable[][] = new BoardCell[15][15];
 	private View[] tokenArr;
+	private int selectedLetters = 0;
+	private TextView count;
 
 	/**
 	 * Этот метод вызывается при запуске активити, в onCreate() пишется инициализация
@@ -31,6 +34,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState); // конструкция super.имя метода нужна для вызова одноименного метода класса-родителя
 		setContentView(R.layout.activity_main); //setContentView(id layout-ресурса) заполняет экран активити содержимым из соотв. layout.xml
+		count = (TextView)findViewById(R.id.textView1);
 		tokenArr = new View[] {findViewById(R.id.TextView07), //tokenArr - массив из 7 TextView с буквами
 				findViewById(R.id.TextView06),
 				findViewById(R.id.TextView05),
@@ -67,8 +71,17 @@ public class MainActivity extends Activity {
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 						((BoardCell)v).setHighlight(!((BoardCell)v).isHighlight());
-						if (((BoardCell)v).isHighlight()) v.setBackgroundColor(0x44ff00ff);
-						else v.setBackgroundColor(Color.TRANSPARENT);
+						if (((BoardCell)v).isHighlight()) {
+							v.setBackgroundColor(0x44ff00ff);
+							Log.d(MainActivity.TAG,""+BoardCell.letterPoints(((BoardCell)v).getText().toString()));
+							selectedLetters+= BoardCell.letterPoints(((BoardCell)v).getText().toString());
+							count.setText("очки за выделенные слова: "+selectedLetters);
+						}
+						else {
+							selectedLetters-= BoardCell.letterPoints(((BoardCell)v).getText());
+							count.setText("очки за выделенные слова: "+selectedLetters);
+							v.setBackgroundColor(Color.TRANSPARENT);
+						}
 					}
 				});
 				rowsList[i].addView(tvTable[i][j],14,14);
@@ -125,7 +138,15 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				for (int i = 0; i < 15; i++) {
-					for (int j = 0; j < 15; j++) tvTable[i][j].setText("");
+					for (int j = 0; j < 15; j++) {
+						if (tvTable[i][j].isHighlight()) {
+							selectedLetters-= BoardCell.letterPoints(tvTable[i][j].getText().toString());
+							tvTable[i][j].setHighlight(false);
+							tvTable[i][j].setBackgroundColor(Color.TRANSPARENT);
+							count.setText("очки за выделенные слова: "+selectedLetters);
+						}
+						tvTable[i][j].setText("");
+					}
 				}
 				
 			}

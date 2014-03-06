@@ -33,13 +33,14 @@ public final class R {
         public static final int TextView05=0x7f080004;
         public static final int TextView06=0x7f080003;
         public static final int TextView07=0x7f080002;
-        public static final int action_settings=0x7f08000d;
+        public static final int action_settings=0x7f08000e;
         public static final int button1=0x7f08000b;
         public static final int button2=0x7f08000c;
         public static final int gl1=0x7f080000;
         public static final int linLayoutL=0x7f080001;
         public static final int rl1=0x7f080009;
         public static final int rows=0x7f08000a;
+        public static final int textView1=0x7f08000d;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
