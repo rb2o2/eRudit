@@ -1,17 +1,21 @@
 package com.example.third;
 
+import java.util.ArrayList;
+
 import com.example.third.R;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.DragShadowBuilder;
 import android.view.View.OnClickListener;
 import android.view.View.OnDragListener;
 import android.view.ViewGroup;
@@ -24,8 +28,25 @@ public class MainActivity extends Activity {
 	public static final String TAG = "mydbg";// Это тег для журналирования, вызываемого Log.d(TAG,"сообщение")
 	private BoardCell tvTable[][] = new BoardCell[15][15];
 	private View[] tokenArr;
-	private int selectedLetters = 0;
-	private TextView count;
+	private static int selectedLetters = 0;
+	private ArrayList<String> deck = new ArrayList<String>(0);
+	public static int getSelectedLetters() {
+		return selectedLetters;
+	}
+
+	public void setSelectedLetters(int selectedLetters) {
+		this.selectedLetters = selectedLetters;
+	}
+
+	private static TextView count;
+	public static TextView getCount() {
+		return count;
+	}
+
+	public void setCount(TextView count) {
+		this.count = count;
+	}
+	private static int dragged = 0;
 
 	/**
 	 * Этот метод вызывается при запуске активити, в onCreate() пишется инициализация
@@ -35,7 +56,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState); // конструкция super.имя метода нужна для вызова одноименного метода класса-родителя
 		setContentView(R.layout.activity_main); //setContentView(id layout-ресурса) заполняет экран активити содержимым из соотв. layout.xml
 		count = (TextView)findViewById(R.id.textView1);
-		tokenArr = new View[] {findViewById(R.id.TextView07), //tokenArr - массив из 7 TextView с буквами
+		tokenArr = new View[] {findViewById(R.id.TextView07), //tokenArr - массив из 7 TextView с буквами в руке
 				findViewById(R.id.TextView06),
 				findViewById(R.id.TextView05),
 				findViewById(R.id.TextView04),
@@ -47,6 +68,7 @@ public class MainActivity extends Activity {
 //		rlBoard.getLayoutParams().
 		LinearLayout rows = (LinearLayout)findViewById(R.id.rows);
 		LinearLayout rowsList[] = new LinearLayout[15];
+		initDeck();
 		for (int i = 0; i<15; i++) {
 			rowsList[i] = new LinearLayout(this);//HORIZONTAL by default
 			for (int j = 0; j<15; j++)	{
@@ -61,7 +83,25 @@ public class MainActivity extends Activity {
 					@Override
 					public boolean onDrag(View v, DragEvent event) {
 						// TODO Auto-generated method stub
-						if(event.getAction() == DragEvent.ACTION_DROP) ((TextView)v).setText(event.getClipData().getItemAt(0).getText());
+						if((event.getAction() == DragEvent.ACTION_DROP)) {
+							if(!(event.getLocalState().equals(v))) {
+								((TextView)v).setText(event.getClipData().getItemAt(0).getText());
+								if (((BoardCell)v).isHighlight()) {
+									selectedLetters+= BoardCell.letterPoints(((BoardCell)v).getText().toString());
+									count.setText("очки за выделенные слова: "+selectedLetters);
+									}
+								if (event.getLocalState() instanceof BoardCell) {
+									if (((BoardCell)(event.getLocalState())).isHighlight()) {
+									selectedLetters-= BoardCell.letterPoints(((BoardCell)(event.getLocalState())).getText().toString());
+									count.setText("очки за выделенные слова: "+selectedLetters); }
+									
+								}
+								((TextView)event.getLocalState()).setText("");
+								return true;
+							}
+							
+						}
+						if(event.getAction() == DragEvent.ACTION_DRAG_ENDED) {}
 						return true;
 					}
 				});
@@ -82,6 +122,22 @@ public class MainActivity extends Activity {
 							count.setText("очки за выделенные слова: "+selectedLetters);
 							v.setBackgroundColor(Color.TRANSPARENT);
 						}
+					}
+				});
+				tvTable[i][j].setOnLongClickListener( new View.OnLongClickListener() {
+					
+					@Override
+					public boolean onLongClick(View v) {
+						// TODO Auto-generated method stub
+						if (!((BoardCell)v).getText().toString().equals("")) {
+							ClipData cd = ClipData.newPlainText("letter", ((TextView)v).getText());
+							DragShadowBuilder sb = new View.DragShadowBuilder(v);
+							v.startDrag(cd, sb, v, 0);
+							MainActivity.setDragged(1); 
+//						v.setVisibility(View.INVISIBLE);
+							return true; 
+						}
+						else return false;
 					}
 				});
 				rowsList[i].addView(tvTable[i][j],14,14);
@@ -189,23 +245,66 @@ public class MainActivity extends Activity {
 
 	}
 
+	private void initDeck() {
+		// TODO Auto-generated method stub
+		for(int i = 0; i<8;i++) deck.add("А");
+		for(int i = 0; i<2;i++) deck.add("Б");
+		for(int i = 0; i<4;i++) deck.add("В");
+		for(int i = 0; i<2;i++) deck.add("Г");
+		for(int i = 0; i<4;i++) deck.add("Д");
+		for(int i = 0; i<9;i++) deck.add("Е");
+		for(int i = 0; i<1;i++) deck.add("Ж");
+		for(int i = 0; i<2;i++) deck.add("З");
+		for(int i = 0; i<6;i++) deck.add("И");
+		for(int i = 0; i<1;i++) deck.add("Й");
+		for(int i = 0; i<4;i++) deck.add("К");
+		for(int i = 0; i<4;i++) deck.add("Л");
+		for(int i = 0; i<3;i++) deck.add("М");
+		for(int i = 0; i<5;i++) deck.add("Н");
+		for(int i = 0; i<10;i++) deck.add("О");
+		for(int i = 0; i<4;i++) deck.add("П");
+		for(int i = 0; i<5;i++) deck.add("Р");
+		for(int i = 0; i<5;i++) deck.add("С");
+		for(int i = 0; i<5;i++) deck.add("Т");
+		for(int i = 0; i<4;i++) deck.add("У");
+		for(int i = 0; i<1;i++) deck.add("Ф");
+		for(int i = 0; i<1;i++) deck.add("Х");
+		for(int i = 0; i<1;i++) deck.add("Ц");
+		for(int i = 0; i<1;i++) deck.add("Ч");
+		for(int i = 0; i<1;i++) deck.add("Ш");
+		for(int i = 0; i<1;i++) deck.add("Щ");
+		for(int i = 0; i<1;i++) deck.add("Ъ");
+		for(int i = 0; i<2;i++) deck.add("Ы");
+		for(int i = 0; i<2;i++) deck.add("Ь");
+		for(int i = 0; i<1;i++) deck.add("Э");
+		for(int i = 0; i<1;i++) deck.add("Ю");
+		for(int i = 0; i<2;i++) deck.add("Я");
+		Log.d(TAG,"в колоде букв: "+deck.size());
+	}
+
 	public String pickLetter() {
 		// TODO переделать, чтобы брал из "колоды"
-		double rand = Math.random();
+		if (deck.size()>0) {
+			double rand = Math.random();
+			int index = (int)(Math.random() * (deck.size()-1));
+			String result = deck.get(index);
+			deck.remove(index);
+			Log.d(TAG,"в колоде букв: "+deck.size());
+			return result;
+		} else return "";
 
-
-		switch (2 + (int)(Math.random() * ((10 - 2) + 1))) {
-		case 2: return "А";
-		case 3: return "Е";
-		case 4: return "О";
-		case 5: return "Н";
-		case 6: return "У";
-		case 7: return "П";
-		case 8: return "И";
-		case 9: return "К";
-		case 10: return "С";
-		default: return "*";
-		}
+//		switch (2 + (int)(Math.random() * ((10 - 2) + 1))) {
+//		case 2: return "А";
+//		case 3: return "Е";
+//		case 4: return "О";
+//		case 5: return "Н";
+//		case 6: return "У";
+//		case 7: return "П";
+//		case 8: return "И";
+//		case 9: return "К";
+//		case 10: return "С";
+//		default: return "*";
+//		}
 		
 		
 	}
@@ -215,6 +314,19 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+	public static int getDragged() {
+		return dragged;
+	}
+
+	public static void setDragged(int dragged) {
+		MainActivity.dragged = dragged;
+	}
+
+	public static void incSelectedLetters(int i) {
+		// TODO Auto-generated method stub
+		selectedLetters+=i;
 	}
 
 }

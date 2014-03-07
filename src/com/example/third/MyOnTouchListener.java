@@ -17,6 +17,8 @@ public class MyOnTouchListener implements OnTouchListener {
 			cd = ClipData.newPlainText("letter", ((TextView)v).getText());
 			DragShadowBuilder sb = new View.DragShadowBuilder(v);
 			v.startDrag(cd, sb, v, 0);
+			if (v instanceof BoardCell) MainActivity.setDragged(1);
+			else MainActivity.setDragged(2);
 //			v.setVisibility(View.INVISIBLE);
 			return true;
 		}
