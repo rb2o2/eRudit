@@ -110,8 +110,8 @@ public class MainActivity extends Activity {
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 						((BoardCell)v).setHighlight(!((BoardCell)v).isHighlight());
-						if (((BoardCell)v).isHighlight()) {
-							v.setBackgroundColor(0x44ff00ff);
+						if (((BoardCell)v).isHighlight()) {//если клетка подсвечена
+							v.setBackgroundColor(0x44ff00ff);//заливаем фон полупрозрачным розовым
 							Log.d(MainActivity.TAG,""+BoardCell.letterPoints(((BoardCell)v).getText().toString()));
 							selectedLetters+= BoardCell.letterPoints(((BoardCell)v).getText().toString());
 							count.setText("очки за выделенные слова: "+selectedLetters);
