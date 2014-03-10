@@ -12,17 +12,18 @@ public class LetterDragEvntL implements OnDragListener {
 	@Override
 	public boolean onDrag(View v, DragEvent e) {
 		String letter = ((TextView)v).getText().toString();
+		Object drag = e.getLocalState();
 		switch (e.getAction()) {
 		case DragEvent.ACTION_DRAG_STARTED  : { 
 			// записываем в журнал начало драга
 			Log.d(MainActivity.TAG,""+v.getId()+" drag started");
-			if (v.equals(e.getLocalState())) Log.d(MainActivity.TAG,"LetterL "+letter+" drag started");
+			if (v.equals(drag)) Log.d(MainActivity.TAG,"LetterL "+letter+" drag started");
 //			v.on
-			if (!(e.getLocalState() instanceof BoardCell)) return false;
+			if (!(drag instanceof BoardCell)) return false;
 			}
 		case DragEvent.ACTION_DRAG_ENDED : {
 			Log.d(MainActivity.TAG, ""+v.getId()+ " drag ended with result "+e.getResult());
-			if (v.equals(e.getLocalState())) {
+			if (v.equals(drag)) {
 				Log.d(MainActivity.TAG,"result = "+e.getResult()+" LetterL "+letter+" drag ended");
 //				((TextView)v).setText("");
 			}
@@ -35,14 +36,17 @@ public class LetterDragEvntL implements OnDragListener {
 		case DragEvent.ACTION_DROP : {
 			Log.d(MainActivity.TAG, ""+v.getId()+" drop" );
 			
-			if (v.equals(e.getLocalState())) {
+			if (v.equals(drag)) {
 				Log.d(MainActivity.TAG,"LetterL "+letter+" dropped back"); 
 				return false;
 			}
-			if (e.getLocalState() instanceof BoardCell && ((TextView)v).getText().toString().contentEquals("")) {
-				((TextView)v).setText(((BoardCell)(e.getLocalState())).getText());
-				MainActivity.incSelectedLetters((int) -1* BoardCell.letterPoints(((BoardCell)(e.getLocalState())).getText().toString()));
-				MainActivity.getCount().setText("очки за выделенные слова: "+MainActivity.getSelectedLetters());
+			if (drag instanceof BoardCell && ((TextView)v).getText().toString().contentEquals("")) {
+				((TextView)v).setText(((BoardCell)drag).getText());
+				if (((BoardCell)(e.getLocalState())).isHighlight()) {
+					MainActivity.incSelectedLetters((int) -1* BoardCell.letterPoints(((BoardCell)drag).getText().toString()));
+					MainActivity.getCount().setText("очки за выделенные слова: "+MainActivity.getSelectedLetters());
+				}
+				
 				((BoardCell)(e.getLocalState())).setText("");
 			}
 			break;

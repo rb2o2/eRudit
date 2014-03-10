@@ -117,18 +117,15 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/board" >
 
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/rows"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clipChildren="true"
+            android:orientation="vertical" >
+        </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/rows"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/rl1"
-        android:layout_alignLeft="@+id/rl1"
-        android:layout_alignRight="@+id/rl1"
-        android:clipChildren="true"
-        android:orientation="vertical" >
-    </LinearLayout>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/button1"

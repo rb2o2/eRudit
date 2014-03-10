@@ -26,10 +26,10 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	public static final String TAG = "mydbg";// Это тег для журналирования, вызываемого Log.d(TAG,"сообщение")
-	private BoardCell tvTable[][] = new BoardCell[15][15];
-	private View[] tokenArr;
-	private static int selectedLetters = 0;
-	private ArrayList<String> deck = new ArrayList<String>(0);
+	private BoardCell tvTable[][] = new BoardCell[15][15]; //массив клеток поля -- экземпляров класса BoardCell
+	private View[] tokenArr; //массив виджетов отображающих буквы на руках
+	private static int selectedLetters = 0; //сумма очков за выделенные слова
+	private ArrayList<String> deck = new ArrayList<String>(0); //колода - список букв
 	public static int getSelectedLetters() {
 		return selectedLetters;
 	}
@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 		this.selectedLetters = selectedLetters;
 	}
 
-	private static TextView count;
+	private static TextView count; //текстовое поле отображающее сумму очков за выделенные на поле буквы
 	public static TextView getCount() {
 		return count;
 	}
@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
 	public void setCount(TextView count) {
 		this.count = count;
 	}
-	private static int dragged = 0;
+	private static int dragged = 0;//не нужно
 
 	/**
 	 * Этот метод вызывается при запуске активити, в onCreate() пишется инициализация
@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState); // конструкция super.имя метода нужна для вызова одноименного метода класса-родителя
 		setContentView(R.layout.activity_main); //setContentView(id layout-ресурса) заполняет экран активити содержимым из соотв. layout.xml
-		count = (TextView)findViewById(R.id.textView1);
+		count = (TextView)findViewById(R.id.textView1); //находим текстовое поле для записи очков
 		tokenArr = new View[] {findViewById(R.id.TextView07), //tokenArr - массив из 7 TextView с буквами в руке
 				findViewById(R.id.TextView06),
 				findViewById(R.id.TextView05),
@@ -63,49 +63,48 @@ public class MainActivity extends Activity {
 				findViewById(R.id.TextView03),
 				findViewById(R.id.TextView02),
 				findViewById(R.id.TextView01)};
-		View groupLayout = findViewById(R.id.gl1);
-		RelativeLayout rlBoard = (RelativeLayout)findViewById(R.id.rl1);
+		View groupLayout = findViewById(R.id.gl1);//поока не нужно
+		RelativeLayout rlBoard = (RelativeLayout)findViewById(R.id.rl1);//пока не нужно
 //		rlBoard.getLayoutParams().
-		LinearLayout rows = (LinearLayout)findViewById(R.id.rows);
-		LinearLayout rowsList[] = new LinearLayout[15];
-		initDeck();
-		for (int i = 0; i<15; i++) {
+		LinearLayout rows = (LinearLayout)findViewById(R.id.rows); 
+		LinearLayout rowsList[] = new LinearLayout[15];//строчки таблицы с клетками поля
+		initDeck();//сдать полный набор букв в "колоду"
+		for (int i = 0; i<15; i++) { //наполнение таблицы строками
 			rowsList[i] = new LinearLayout(this);//HORIZONTAL by default
-			for (int j = 0; j<15; j++)	{
+			for (int j = 0; j<15; j++)	{ //наполнение строки
 				
-				tvTable[i][j] = new BoardCell(this);
-				tvTable[i][j].setText("");
-				tvTable[i][j].setGravity(Gravity.CENTER);
-				tvTable[i][j].setCoordX(j);
+				tvTable[i][j] = new BoardCell(this); //создаем клетку
+				tvTable[i][j].setText("");//пишем в ней пустую строку
+				tvTable[i][j].setGravity(Gravity.CENTER);//размещаем по центру
+				tvTable[i][j].setCoordX(j);//устанавливаем свойства - координаты по горизонтали и вертикали
 				tvTable[i][j].setCoordY(i);
-				tvTable[i][j].setOnDragListener(new View.OnDragListener() {
+				tvTable[i][j].setOnDragListener(new View.OnDragListener() { //задаем новый слушатель драг-события
 					
 					@Override
-					public boolean onDrag(View v, DragEvent event) {
-						// TODO Auto-generated method stub
-						if((event.getAction() == DragEvent.ACTION_DROP)) {
-							if(!(event.getLocalState().equals(v))) {
-								((TextView)v).setText(event.getClipData().getItemAt(0).getText());
-								if (((BoardCell)v).isHighlight()) {
-									selectedLetters+= BoardCell.letterPoints(((BoardCell)v).getText().toString());
+					public boolean onDrag(View v, DragEvent event) {//перегружаем в слушателе метод onDrag()
+						if((event.getAction() == DragEvent.ACTION_DROP)) {//при дропе внутрь виджета v
+							if(!(event.getLocalState().equals(v))) {//если дропаем на самое себя
+								((TextView)v).setText(event.getClipData().getItemAt(0).getText());//пишем куда дропнули то что было в перетаскиваемой клетке
+								if (((BoardCell)v).isHighlight()) {//если клетка куда дропнули подсвечена
+									selectedLetters+= BoardCell.letterPoints(((BoardCell)v).getText().toString());//то добавляем за нее очки и обновляем отображение очков
 									count.setText("очки за выделенные слова: "+selectedLetters);
-									}
+								}
 								if (event.getLocalState() instanceof BoardCell) {
-									if (((BoardCell)(event.getLocalState())).isHighlight()) {
+									if (((BoardCell)(event.getLocalState())).isHighlight()) { //если то что драгаем было подсвечено, вычитаем из очков ее стоимость
 									selectedLetters-= BoardCell.letterPoints(((BoardCell)(event.getLocalState())).getText().toString());
 									count.setText("очки за выделенные слова: "+selectedLetters); }
 									
 								}
-								((TextView)event.getLocalState()).setText("");
-								return true;
+								((TextView)event.getLocalState()).setText("");//пишем пустую строку
+								return true;//событие обработано
 							}
 							
 						}
-						if(event.getAction() == DragEvent.ACTION_DRAG_ENDED) {}
-						return true;
+						//if(event.getAction() == DragEvent.ACTION_DRAG_ENDED) {}
+						return true;//событие обработано
 					}
 				});
-				tvTable[i][j].setOnClickListener(new View.OnClickListener() {
+				tvTable[i][j].setOnClickListener(new View.OnClickListener() { //задаем клетке поля слушатель клика для подсветки
 					
 					@Override
 					public void onClick(View v) {
@@ -140,7 +139,7 @@ public class MainActivity extends Activity {
 						else return false;
 					}
 				});
-				rowsList[i].addView(tvTable[i][j],14,14);
+				rowsList[i].addView(tvTable[i][j],28,28);
 			}
 			rows.addView(rowsList[i]);
 		}
