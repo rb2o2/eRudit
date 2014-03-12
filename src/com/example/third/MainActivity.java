@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
 	public static final String TAG = "mydbg";// Это тег для журналирования, вызываемого Log.d(TAG,"сообщение")
 	private BoardCell tvTable[][] = new BoardCell[15][15]; //массив клеток поля -- экземпляров класса BoardCell
 	private View[] tokenArr; //массив виджетов отображающих буквы на руках
+	private HandCell[] tokenArray;
 	private static int selectedLetters = 0; //сумма очков за выделенные слова
 	private ArrayList<String> deck = new ArrayList<String>(0); //колода - список букв
 	public static int getSelectedLetters() {
@@ -55,14 +56,19 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState); // конструкция super.имя метода нужна для вызова одноименного метода класса-родителя
 		setContentView(R.layout.activity_main); //setContentView(id layout-ресурса) заполняет экран активити содержимым из соотв. layout.xml
+		
 		count = (TextView)findViewById(R.id.textView1); //находим текстовое поле для записи очков
-		tokenArr = new View[] {findViewById(R.id.TextView07), //tokenArr - массив из 7 TextView с буквами в руке
+		tokenArr = new View[] {findViewById(R.id.TextView07), //tokenArr - массив из 7 TextView с буквами на руке внизу экрана
 				findViewById(R.id.TextView06),
 				findViewById(R.id.TextView05),
 				findViewById(R.id.TextView04),
 				findViewById(R.id.TextView03),
 				findViewById(R.id.TextView02),
 				findViewById(R.id.TextView01)};
+		for (View v : tokenArr) {
+			
+		}
+		//tokenArray = new HandCell[7];//на будущее будет массив из экземпляров класса HandCell - наследника TextView
 		View groupLayout = findViewById(R.id.gl1);//поока не нужно
 		RelativeLayout rlBoard = (RelativeLayout)findViewById(R.id.rl1);//пока не нужно
 //		rlBoard.getLayoutParams().
@@ -82,20 +88,47 @@ public class MainActivity extends Activity {
 					
 					@Override
 					public boolean onDrag(View v, DragEvent event) {//перегружаем в слушателе метод onDrag()
-						if((event.getAction() == DragEvent.ACTION_DROP)) {//при дропе внутрь виджета v
-							if(!(event.getLocalState().equals(v))) {//если дропаем на самое себя
-								((TextView)v).setText(event.getClipData().getItemAt(0).getText());//пишем куда дропнули то что было в перетаскиваемой клетке
-								if (((BoardCell)v).isHighlight()) {//если клетка куда дропнули подсвечена
+						Object drag = event.getLocalState(); //сохраняем перетаскиваемый объект
+						if((event.getAction() == DragEvent.ACTION_DROP)) 
+						{//при дропе внутрь клетки поля v объекта drag
+							if(!(drag.equals(v))&&!(((TextView)drag).getText().toString().equals(""))) {//если дропаем не на самое себя и не перетаскиваем пустую клетку
+								String dragLetter = ((TextView)drag).getText().toString();//записываем перетаскиваемую букву
+								String dropLetter  =((TextView)v).getText().toString();//записываем букву из клетки, в которую произошел дроп
+								Log.d(TAG,"drop: "+dropLetter+"; drag: "+dragLetter);
+								((BoardCell)v).setText(dragLetter);//пишем куда дропнули то что было в перетаскиваемой клетке
+							/*	if (((BoardCell)v).isHighlight()) {//если клетка куда дропнули подсвечена
 									selectedLetters+= BoardCell.letterPoints(((BoardCell)v).getText().toString());//то добавляем за нее очки и обновляем отображение очков
 									count.setText("очки за выделенные слова: "+selectedLetters);
 								}
-								if (event.getLocalState() instanceof BoardCell) {
-									if (((BoardCell)(event.getLocalState())).isHighlight()) { //если то что драгаем было подсвечено, вычитаем из очков ее стоимость
-									selectedLetters-= BoardCell.letterPoints(((BoardCell)(event.getLocalState())).getText().toString());
-									count.setText("очки за выделенные слова: "+selectedLetters); }
-									
+								if (drag instanceof BoardCell) {
+									if (((BoardCell)drag).isHighlight()) { //если то что драгаем было подсвечено, вычитаем из очков ее стоимость
+										selectedLetters-= BoardCell.letterPoints(((BoardCell)(event.getLocalState())).getText().toString());
+										count.setText("очки за выделенные слова: "+selectedLetters); 
+									}
 								}
-								((TextView)event.getLocalState()).setText("");//пишем пустую строку
+								if (!((BoardCell)drag).getText().toString().equals("")&&((TextView)v).getText().toString().equals("")) {
+									((TextView)drag).setText("");//пишем пустую строку
+								} */
+								if (drag instanceof BoardCell) { //проверяем перетаскиваем ли клетку поля
+									{ //если дропаем клетку поля в клетку поля, и там, куда дропаем нет буквы
+											//записываем в поле куда дропаем перетаскиваемую букву
+										if (((BoardCell)v).isHighlight()) { //если поле в которое дропаем подсвечено
+											selectedLetters+=BoardCell.letterPoints(dragLetter);
+											selectedLetters-=BoardCell.letterPoints(dropLetter);
+										}
+										if (((BoardCell)drag).isHighlight()) {//если перетаскиваемое поле подсвечено
+											selectedLetters-=BoardCell.letterPoints(dragLetter);
+											selectedLetters+=BoardCell.letterPoints(dropLetter);
+										}
+										((TextView)drag).setText(dropLetter);
+									}
+								} else if (dropLetter.equals("")) { //перетаскиваем с руки в пустю клетку поля
+									if (((BoardCell)v).isHighlight()) {
+										selectedLetters+=BoardCell.letterPoints(dragLetter);
+									}
+									((TextView)drag).setText(dropLetter);
+								}
+								count.setText("очки за выделенные слова: "+selectedLetters);
 								return true;//событие обработано
 							}
 							
@@ -139,7 +172,8 @@ public class MainActivity extends Activity {
 						else return false;
 					}
 				});
-				rowsList[i].addView(tvTable[i][j],28,28);
+				int dim = (int) (28/1.5 * getResources().getDisplayMetrics().density); // работает нормально для ldpi и hdpi
+				rowsList[i].addView(tvTable[i][j],dim,dim);
 			}
 			rows.addView(rowsList[i]);
 		}
